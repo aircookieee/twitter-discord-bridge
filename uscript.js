@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Twitter/X to Discord - V5.5 (Restored Post View Padding)
+// @name         Twitter/X to Discord - V5.6 (Compact Post View)
 // @namespace    http://tampermonkey.net/
-// @version      5.5
-// @description  Adds a toolbar. Tighter spacing in timeline; Restored spacing in Post View. Unlimited channels.
+// @version      5.6
+// @description  Adds a toolbar. Tighter spacing in both timeline and post view. Unlimited channels.
 // @author       You
 // @match        https://twitter.com/*
 // @match        https://x.com/*
@@ -40,10 +40,10 @@
 
         /* Post View Class (Applied to the Main Tweet) */
         .dt-spacing-post {
-            margin-top: 12px;     /* Restored spacing ABOVE buttons in post view */
-            padding-bottom: 12px; /* Spacing BELOW buttons in post view */
+            margin-top: 6px;      /* Reduced from 12px to 6px */
+            padding-bottom: 6px;  /* Reduced from 12px to 6px */
         }
-
+        
         .dt-btn {
             background-color: transparent;
             border: 1px solid #536471;
@@ -55,7 +55,7 @@
             cursor: pointer;
             transition: all 0.2s;
             font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            flex: 1 1 0px;
+            flex: 1 1 0px; 
             width: 0;
             min-width: 0;
             white-space: nowrap;
@@ -64,13 +64,13 @@
             text-align: center;
         }
         .dt-btn:hover { background-color: rgba(239, 243, 244, 0.1); color: #eff3f4; border-color: #eff3f4; }
-
+        
         .dt-btn-send { border-color: #5865F2; color: #5865F2; }
         .dt-btn-send:hover { background-color: #5865F2; color: white; }
-
+        
         .dt-toggle-on { color: #00ba7c; border-color: #00ba7c; }
         .dt-toggle-on:hover { background-color: rgba(0, 186, 124, 0.1); }
-
+        
         .dt-toggle-off { color: #f91880; border-color: #f91880; }
         .dt-toggle-off:hover { background-color: rgba(249, 24, 128, 0.1); }
 
@@ -104,7 +104,7 @@
             color: #e7e9ea; padding: 8px; border-radius: 4px; box-sizing: border-box;
         }
         .dt-input:focus { border-color: #1d9bf0; outline: none; }
-
+        
         .dt-channel-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
         .dt-btn-icon {
             background: none; border: none; color: #f91880; cursor: pointer;
@@ -165,7 +165,7 @@
         overlay.className = 'dt-modal-overlay';
         const modal = document.createElement('div');
         modal.className = 'dt-modal';
-
+        
         modal.innerHTML = `
             <div class="dt-modal-header">
                 <span>Configure Twitter to Discord</span>
@@ -187,7 +187,7 @@
                 <button class="dt-btn-primary" id="dt-save">Save</button>
             </div>
         `;
-
+        
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
 
@@ -210,7 +210,7 @@
         modal.querySelector('#dt-add-btn').onclick = () => addRow();
         modal.querySelector('#dt-close').onclick = () => overlay.remove();
         modal.querySelector('#dt-cancel').onclick = () => overlay.remove();
-
+        
         modal.querySelector('#dt-save').onclick = () => {
             const newSettings = {
                 embedder: modal.querySelector('#dt-embedder').value.replace(/^https?:\/\//, ''),
@@ -281,7 +281,7 @@
             const link = timeElement.closest('a');
             if (link) return link.href;
         }
-        return window.location.href;
+        return window.location.href; 
     }
 
     function injectToolbar(group) {
@@ -297,13 +297,13 @@
         const currentPath = window.location.pathname.replace(/\/$/, '');
         let tweetPath = "";
         try { tweetPath = new URL(tweetUrl).pathname.replace(/\/$/, ''); } catch(e) { tweetPath = currentPath; }
-
+        
         const isMainTweet = (currentPath === tweetPath);
 
         // Create Container
         const toolbar = document.createElement('div');
         toolbar.className = 'dt-discord-toolbar';
-
+        
         // Apply conditional spacing class
         if (isMainTweet) {
             toolbar.classList.add('dt-spacing-post');
@@ -315,13 +315,13 @@
         const toggleBtn = document.createElement('button');
         toggleBtn.className = `dt-btn ${settings.useEmbedder ? 'dt-toggle-on' : 'dt-toggle-off'}`;
         toggleBtn.innerText = settings.useEmbedder ? `Embedder: ON` : `Embedder: OFF`;
-
+        
         toggleBtn.onclick = (e) => {
             e.preventDefault();
             const currentSettings = loadSettings();
             currentSettings.useEmbedder = !currentSettings.useEmbedder;
             saveSettings(currentSettings);
-
+            
             toggleBtn.className = `dt-btn ${currentSettings.useEmbedder ? 'dt-toggle-on' : 'dt-toggle-off'}`;
             toggleBtn.innerText = currentSettings.useEmbedder ? `Embedder: ON` : `Embedder: OFF`;
         };
@@ -334,7 +334,7 @@
                 const sendBtn = document.createElement('button');
                 sendBtn.className = 'dt-btn dt-btn-send';
                 sendBtn.innerText = ch.name;
-
+                
                 sendBtn.onclick = (e) => {
                     e.preventDefault();
                     sendToDiscord(tweetUrl, ch.url, sendBtn);
@@ -362,7 +362,7 @@
                         const group = shareBtn.closest('[role="group"]');
                         if (group) injectToolbar(group);
                     });
-
+                    
                     if (n.getAttribute && n.getAttribute('role') === 'group') {
                         injectToolbar(n);
                     }
