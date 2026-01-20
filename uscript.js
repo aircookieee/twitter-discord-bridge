@@ -1,11 +1,13 @@
 // ==UserScript==
-// @name         Twitter/X to Discord - V5.3 (Reduced Timeline Padding)
+// @name         Twitter/X to Discord - V5.5 (Restored Post View Padding)
 // @namespace    http://tampermonkey.net/
-// @version      5.3
-// @description  Adds a toolbar. Tighter spacing in timeline; Post View has bottom padding. Unlimited channels.
+// @version      5.5
+// @description  Adds a toolbar. Tighter spacing in timeline; Restored spacing in Post View. Unlimited channels.
 // @author       You
 // @match        https://twitter.com/*
 // @match        https://x.com/*
+// @updateURL    https://raw.githubusercontent.com/aircookieee/twitter-discord-bridge/refs/heads/main/uscript.js
+// @downloadURL  https://raw.githubusercontent.com/aircookieee/twitter-discord-bridge/refs/heads/main/uscript.js
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -33,14 +35,13 @@
 
         /* Timeline Spacing Class (Applied only in Timeline/Feed) */
         .dt-spacing-timeline {
-            margin-top: 6px; /* Reduced from 12px to 6px for tighter look */
+            margin-top: 6px; /* Compact spacing for timeline */
         }
 
         /* Post View Class (Applied to the Main Tweet) */
         .dt-spacing-post {
-            margin-top: 0px;    /* Tight to the buttons above */
-            padding-top: 4px;   /* Minimal top padding */
-            padding-bottom: 12px; /* Extra spacing BELOW buttons in post view */
+            margin-top: 12px;     /* Restored spacing ABOVE buttons in post view */
+            padding-bottom: 12px; /* Spacing BELOW buttons in post view */
         }
 
         .dt-btn {
